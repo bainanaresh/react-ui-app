@@ -1,9 +1,11 @@
 import React from 'react';
 import { Table } from 'antd';
 
-const ProductListt=({products,deleteData,editProduct})=>{
+const ProductListt=({products,deleteData,editProduct,isAdmin})=>{
 
-    const columns = [
+  let columns ;
+  if(isAdmin){
+     columns = [
         {
           title: 'ID',
           dataIndex: 'id',
@@ -39,8 +41,37 @@ const ProductListt=({products,deleteData,editProduct})=>{
             //render: () => <button className="btn btn-danger" onClick={()=>deleteData(data.id)}>delete</button>,
           },
       ];
+    }else{
+      columns = [
+        {
+          title: 'ID',
+          dataIndex: 'id',
+          
+        },
+        {
+          title: 'Name',
+          dataIndex: 'name',
+          
+        },
+        {
+          title: 'Price',
+          dataIndex: 'price',
+        },
+        {
+            title: 'Category',
+            dataIndex: 'category',
+          },
+
+          {
+            title: 'Company',
+            dataIndex: 'company',
+          },
+      ];
+    }
 
       const dataa = [];
+      
+      if(isAdmin){
       products.map(
         (data)=>(
             dataa.push({
@@ -54,6 +85,21 @@ const ProductListt=({products,deleteData,editProduct})=>{
                 delete: <button className="btn btn-danger" onClick={()=>deleteData(data.id)}>delete</button>,
               })
          ))
+        }else{
+          products.map(
+            (data)=>(
+                dataa.push({
+                    key: data.id,
+                    id: data.id,
+                    name: data.name,
+                    price:data.price,
+                    category:data.category,
+                    company:data.company,
+                    //edit: <button className="btn btn-primary" onClick={()=>editProduct(data)}>edit</button>,
+                    //delete: <button className="btn btn-danger" onClick={()=>deleteData(data.id)}>delete</button>,
+                  })
+             ))
+        }
       
     return(   
         <div>

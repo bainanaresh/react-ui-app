@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   AutoComplete,
   Button,
@@ -11,6 +12,8 @@ import {
   Row,
   Select,
 } from 'antd';
+import Password from 'antd/es/input/Password';
+import { logout, registerAPICall } from './authServiceApi';
 const { Option } = Select;
 const residences = [
   {
@@ -77,10 +80,41 @@ const tailFormItemLayout = {
   },
 };
 const Registration = () => {
+  const navigator=useNavigate();
   const [form] = Form.useForm();
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
+    const regObj={
+      name:values.name,
+      userName:values.userName,
+      email:values.email,
+      password:values.password,
+      mobile:values.mobile,
+      role:values.role
+    }
+
+    console.log(regObj);
+   handleRegistrationForm(regObj);
+
   };
+
+  async function handleRegistrationForm(regObj){
+
+    
+    //e.preventDefault();
+
+    await registerAPICall(regObj).then((response) => {
+        console.log(response.data);
+        alert(response.data);
+        //logout();
+        navigator("/")
+
+       // window.location.reload(false);
+    }).catch(error => {
+        console.error(error);
+    })
+
+}
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -111,6 +145,37 @@ const Registration = () => {
       }}
       scrollToFirstError
     >
+
+<Form.Item
+        name="name"
+        label="Name"
+        tooltip="What do you want others to call you?"
+        rules={[
+          {
+            required: true,
+            message: 'Please enter your name!',
+            whitespace: true,
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        name="userName"
+        label="UserNmae"
+        tooltip="What is your username?"
+        rules={[
+          {
+            required: true,
+            message: 'Please enter your username!',
+            whitespace: true,
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
       <Form.Item
         name="email"
         label="E-mail"
@@ -165,55 +230,10 @@ const Registration = () => {
         <Input.Password />
       </Form.Item>
 
-      <Form.Item
-        name="nickname"
-        label="Nickname"
-        tooltip="What do you want others to call you?"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your nickname!',
-            whitespace: true,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
 
       <Form.Item
-        name="nickname"
-        label="Nickname"
-        tooltip="What do you want others to call you?"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your nickname!',
-            whitespace: true,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        name="nickname"
-        label="Nickname"
-        tooltip="What do you want others to call you?"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your nickname!',
-            whitespace: true,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
-
-      <Form.Item
-        name="phone"
-        label="Phone Number"
+        name="mobile"
+        label="Mobile"
         rules={[
           {
             required: true,
@@ -227,6 +247,23 @@ const Registration = () => {
             width: '100%',
           }}
         />
+      </Form.Item>
+
+      <Form.Item
+        name="role"
+        label="Role"
+        rules={[
+          {
+            required: true,
+            message: 'Please input your role !',
+          },
+        ]}
+      >
+      
+      <Select defaultValue="please select...">
+        <Option value="user">User</Option>
+        <Option value="admin">Admin</Option>
+      </Select>
       </Form.Item>
 
 

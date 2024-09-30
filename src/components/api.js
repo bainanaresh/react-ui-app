@@ -1,6 +1,18 @@
 import axios from 'axios'
+import { getToken } from './authServiceApi';
 
 const url="http://localhost:9191/api";
+
+// Add a request interceptor
+axios.interceptors.request.use(function (config) {
+    
+    config.headers['Authorization'] = getToken();
+
+    return config;
+  }, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  });
 
 export async function  getProductsData(){
     

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import "../index.css"
 import { deleteProduct, getProductsData, postData, updateData } from "./api";
 import Form from "./Form";
+import { isAdminUser } from "./authServiceApi";
 
 const Dashboardd=()=>{
 
@@ -15,6 +16,8 @@ const Dashboardd=()=>{
     const [edit,setEdit]= useState(false)
 
     const [initialFormdata,setInitialFormdata]=useState({id:'',name:'',price:'',company:'',category:''})
+
+    const isAdmin = isAdminUser();
     
     useEffect(()=>{
         getData()
@@ -76,8 +79,10 @@ const Dashboardd=()=>{
         <div className="wrapper ">
         <div className="addproduct">
         <h2 className="text-primary">crud application</h2>
-        <button className="btn btn-primary" onClick={showForm}>addProduct</button>
-        <ProductListt products={products} deleteData={deleteData} editProduct={editProduct}></ProductListt>
+        {
+            isAdmin && <button className="btn btn-primary" onClick={showForm}>addProduct</button>
+        }
+        <ProductListt products={products} deleteData={deleteData} editProduct={editProduct} isAdmin={isAdmin}></ProductListt>
         {
             openForm && <Form showForm={showForm} closeForm={closeForm} initialFormdata={initialFormdata} addProduct={addProduct}></Form>
         }

@@ -2,10 +2,40 @@ import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex } from 'antd';
 import Registration from './Registration';
+import { useNavigate } from 'react-router-dom';
+import { loginAPICall, logout, saveLoggedInUser, storeToken } from './authServiceApi';
+
 const Login = () => {
+  const navigator=useNavigate();
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
+    console.log('Received values of form: ', values.username,values.password);
+    handleLoginForm(values.username,values.password);
   };
+
+  async function handleLoginForm(username,password){
+
+    //e.preventDefault();
+
+    await loginAPICall(username, password).then((response) => {
+        console.log(response.data);
+
+        //const token = 'Basic ' + window.btoa(username + ":" + password);
+        const token = 'Bearer ' + response.data.accessToken;
+        const role = response.data.role;
+        console.log(token);
+        storeToken(token);
+
+        saveLoggedInUser(username,role);
+        navigator("/dashboard")
+
+        window.location.reload(false);
+    }).catch(error => {
+        console.error(error);
+    })
+
+}
+
   return (
     <div className='loginForm'>
     <Form
